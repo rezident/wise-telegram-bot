@@ -6,6 +6,11 @@
             "Rezident\\WiseTelegramBot\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Rezident\\WiseTelegramBot\\tests\\": "tests/"
+        }
+    },
     "authors": [
         {
             "name": "Yuri Nazarenko",
