@@ -19,7 +19,8 @@ return $config
             '@PHP80Migration' => true,
             '@PHP80Migration:risky' => true,
             'concat_space' => ['spacing' => 'one'],
-        ]
+            'trailing_comma_in_multiline' => ['elements' => ['arguments', 'arrays', 'match', 'parameters']],
+        ],
     )
     ->setHideProgress(false)
     ->setFinder($finder);
