@@ -1,0 +1,22 @@
+{
+    "name": "rezident/wise-telegram-bot",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Rezident\\WiseTelegramBot\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Yuri Nazarenko",
+            "email": "m@rezident.org"
+        }
+    ],
+    "require": {
+        "php": "^8.0",
+        "rezident/self-documented-telegram-bot-sdk": "^6.4"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    }
+}
