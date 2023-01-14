@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\di;
 
-use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\WiseTelegramBot\di\Container;
 use Rezident\WiseTelegramBot\di\exceptions\ClassNotFoundException;
 use Rezident\WiseTelegramBot\di\exceptions\WrongInstanceException;
@@ -23,15 +22,15 @@ class ContainerTest extends TestCase
 
     public function testSetAndGetSame(): void
     {
-        $instance = new Executor('');
-        $this->container->set(Executor::class, $instance);
-        $this->assertSame($instance, $this->container->get(Executor::class));
+        $instance = new InjectableClass();
+        $this->container->set(InjectableClass::class, $instance);
+        $this->assertSame($instance, $this->container->get(InjectableClass::class));
     }
 
     public function testThrowWrongInstanceException(): void
     {
         $this->expectException(WrongInstanceException::class);
-        $this->container->set(self::class, new Executor(''));
+        $this->container->set(self::class, new InjectableClass());
     }
 
     public function testCreateInstance(): void
