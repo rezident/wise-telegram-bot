@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\di;
 
-use Rezident\WiseTelegramBot\di\Container;
 use Rezident\WiseTelegramBot\di\exceptions\ClassNotFoundException;
 use Rezident\WiseTelegramBot\di\exceptions\WrongInstanceException;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
@@ -13,13 +12,6 @@ use Rezident\WiseTelegramBot\tests\di\classes\WithDependencyClass;
 
 class ContainerTest extends TestCase
 {
-    private Container $container;
-
-    protected function setUp(): void
-    {
-        $this->container = new Container();
-    }
-
     public function testSetAndGetSame(): void
     {
         $instance = new InjectableClass();

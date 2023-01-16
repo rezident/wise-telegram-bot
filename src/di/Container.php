@@ -22,6 +22,13 @@ class Container
         $this->instances[$className] = $instance;
     }
 
+    /**
+     * @psalm-template T
+     *
+     * @psalm-param class-string<T> $className
+     *
+     * @psalm-return T
+     */
     public function get(string $className): object
     {
         if (!isset($this->instances[$className]) || isset($this->uniques[$className])) {

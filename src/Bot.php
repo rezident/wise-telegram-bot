@@ -12,8 +12,8 @@ class Bot extends BotImplementation
 {
     public function __construct(string $token)
     {
-        $conatiner = new Container();
-        $conatiner->set(Executor::class, new Executor($token));
-        parent::__construct($conatiner);
+        $container = new Container();
+        $container->set(Executor::class, new Executor($token));
+        parent::__construct($container);
     }
 }
