@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\di;
 
+use Rezident\WiseTelegramBot\di\Container;
 use Rezident\WiseTelegramBot\di\exceptions\ClassNotFoundException;
 use Rezident\WiseTelegramBot\di\exceptions\WrongInstanceException;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
@@ -55,5 +56,10 @@ class ContainerTest extends TestCase
     {
         $this->expectException(ClassNotFoundException::class);
         $this->container->get('bad class name');
+    }
+
+    public function testContainsItSelf(): void
+    {
+        $this->assertSame($this->container, $this->container->get(Container::class));
     }
 }

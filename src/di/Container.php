@@ -13,6 +13,11 @@ class Container
 
     private array $instances = [];
 
+    public function __construct()
+    {
+        $this->set(self::class, $this);
+    }
+
     public function set(string $className, object $instance): void
     {
         if (!$instance instanceof $className) {
