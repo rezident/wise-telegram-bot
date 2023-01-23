@@ -9,14 +9,12 @@ use Rezident\WiseTelegramBot\command\exceptions\UnimplementedInterfaceException;
 
 class CommandDefinition
 {
-    private string $className;
-
     private string $id;
 
     private ?string $description;
 
     public function __construct(
-        string $className,
+        private string $className,
         CommandIdCreator $commandIdCreator,
         CommandDescriptionExtractor $commandDescriptionExtractor,
     ) {
@@ -29,7 +27,6 @@ class CommandDefinition
             throw new UnimplementedInterfaceException($className);
         }
 
-        $this->className = $className;
         $this->id = $commandIdCreator->create($reflection->getShortName());
         $this->description = $commandDescriptionExtractor->extract($reflection->getDocComment());
     }
