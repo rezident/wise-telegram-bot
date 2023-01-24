@@ -6,7 +6,7 @@ namespace Rezident\WiseTelegramBot\command;
 
 class CommandDescriptionExtractor
 {
-    public function extract(string|bool $docComment): ?string
+    public function extract(string|false $docComment): ?string
     {
         if (false === $docComment) {
             return null;
