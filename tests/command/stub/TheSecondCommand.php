@@ -6,11 +6,9 @@ namespace Rezident\WiseTelegramBot\tests\command\stub;
 
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\command\CommandInterface;
+use Rezident\WiseTelegramBot\command\Description;
 
-/**
- * The first line of description.
- * The ignored line of description.
- */
+#[Description('The description of the_second command')]
 class TheSecondCommand implements CommandInterface
 {
     public function handle(string $argument, Update $update): void

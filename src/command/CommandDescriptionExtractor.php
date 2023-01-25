@@ -6,18 +6,11 @@ namespace Rezident\WiseTelegramBot\command;
 
 class CommandDescriptionExtractor
 {
-    public function extract(string|false $docComment): ?string
+    public function extract(\ReflectionClass $reflectionClass): ?string
     {
-        if (false === $docComment) {
-            return null;
-        }
+        $attribute = $reflectionClass->getAttributes(Description::class)[0] ?? null;
+        $attributeInstance = $attribute?->newInstance();
 
-        preg_match('/^ \* (.+)$/mu', $docComment, $matches);
-
-        if (2 !== \count($matches)) {
-            return null;
-        }
-
-        return trim(trim($matches[1]), '.');
+        return $attributeInstance instanceof Description ? $attributeInstance->getDescription() : null;
     }
 }

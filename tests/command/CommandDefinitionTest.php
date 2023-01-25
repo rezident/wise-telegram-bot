@@ -35,7 +35,7 @@ class CommandDefinitionTest extends TestCase
     public function testGetDescription(): void
     {
         $definition = new CommandDefinition(TheSecondCommand::class, new CommandIdCreator(), new CommandDescriptionExtractor());
-        $this->assertEquals('The first line of description', $definition->getDescription());
+        $this->assertEquals('The description of the_second command', $definition->getDescription());
     }
 
     public function testGetClassName(): void

@@ -15,14 +15,14 @@ class CommandDescriptionExtractorTest extends TestCase
     {
         $extractor = new CommandDescriptionExtractor();
         $this->assertEquals(
-            'The first line of description',
-            $extractor->extract((new \ReflectionClass(TheSecondCommand::class))->getDocComment()),
+            'The description of the_second command',
+            $extractor->extract(new \ReflectionClass(TheSecondCommand::class)),
         );
     }
 
     public function testExtractNull(): void
     {
         $extractor = new CommandDescriptionExtractor();
-        $this->assertNull($extractor->extract((new \ReflectionClass(FirstCommand::class))->getDocComment()));
+        $this->assertNull($extractor->extract(new \ReflectionClass(FirstCommand::class)));
     }
 }

@@ -28,7 +28,7 @@ class CommandDefinition
         }
 
         $this->id = $commandIdCreator->create($reflection->getShortName());
-        $this->description = $commandDescriptionExtractor->extract($reflection->getDocComment());
+        $this->description = $commandDescriptionExtractor->extract($reflection);
     }
 
     public function getId(): string

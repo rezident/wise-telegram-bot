@@ -42,7 +42,7 @@ class CommandResolver
                 $this->commandIdCreator,
                 $this->commandDescriptionExtractor,
             );
-        } catch (\Exception $exception) {
+        } catch (\Exception) {
             return;
         }
 
