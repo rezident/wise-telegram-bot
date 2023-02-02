@@ -29,7 +29,7 @@ class CommandResolver
         array_map(fn ($className) => $this->addCommand($className), $classNames);
     }
 
-    public function addDefaultCommand(string $className): void
+    public function setDefaultCommand(string $className): void
     {
         $this->addCommand($className, self::DEFAULT_COMMAND_ID);
     }

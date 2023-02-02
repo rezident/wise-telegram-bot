@@ -47,7 +47,7 @@ class CommandResolverTest extends TestCase
 
     public function testResolveDefaultCommand(): void
     {
-        $this->resolver->addDefaultCommand(FirstCommand::class);
+        $this->resolver->setDefaultCommand(FirstCommand::class);
         $command = $this->resolver->resolve('random string');
         $this->assertNotNull($command);
         $this->assertEquals(FirstCommand::class, $command->getClassName());
