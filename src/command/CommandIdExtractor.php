@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\command;
 
-class CommandIdCreator
+class CommandIdExtractor
 {
-    public function create(string $shortClassName): string
+    public function extract(\ReflectionClass $reflection): string
     {
-        $shortClassNameWithCutCommand = preg_replace('/Command$/', '', $shortClassName);
+        $shortClassNameWithCutCommand = preg_replace('/Command$/', '', $reflection->getShortName());
         $command = preg_replace('/([A-Z])/', '_$1', $shortClassNameWithCutCommand);
 
         return strtolower(trim($command, '_'));

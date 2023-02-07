@@ -15,7 +15,7 @@ class CommandDefinition
 
     public function __construct(
         private string $className,
-        CommandIdCreator $commandIdCreator,
+        CommandIdExtractor $commandIdExtractor,
         CommandDescriptionExtractor $commandDescriptionExtractor,
     ) {
         if (!class_exists($className)) {
@@ -27,7 +27,7 @@ class CommandDefinition
             throw new UnimplementedInterfaceException($className);
         }
 
-        $this->id = $commandIdCreator->create($reflection->getShortName());
+        $this->id = $commandIdExtractor->extract($reflection);
         $this->description = $commandDescriptionExtractor->extract($reflection);
     }
 

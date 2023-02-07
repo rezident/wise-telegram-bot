@@ -14,7 +14,7 @@ class CommandResolver
     private array $commands = [];
 
     public function __construct(
-        private CommandIdCreator $commandIdCreator,
+        private CommandIdExtractor $commandIdCreator,
         private CommandDescriptionExtractor $commandDescriptionExtractor,
     ) {
     }
