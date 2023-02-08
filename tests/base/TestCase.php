@@ -28,6 +28,7 @@ class TestCase extends \PHPUnit\Framework\TestCase
     {
         $mock = $this->createMock($className);
         $this->container->set($className, $mock);
+        $this->container->set($mock::class, $mock);
 
         return $mock;
     }

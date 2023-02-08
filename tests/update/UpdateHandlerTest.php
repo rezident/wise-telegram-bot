@@ -28,20 +28,35 @@ class UpdateHandlerTest extends TestCase
 
     public function testHandleSpecifiedCommand(): void
     {
-        $this->registerMock(TheSecondCommand::class)
-            ->expects($this->never())
-            ->method('handle');
-        $activeCommand = $this->createMock(TheThirdOneCommand::class);
-        $id = $this->idExtractor->extract(new \ReflectionClass($activeCommand));
-        $this->resolver->addCommands([$activeCommand::class]);
+        $this->addInactiveCommand();
+        $update = $this->addActiveCommand('/%s hello', 'hello');
+
         $handler = $this->container->get(UpdateHandler::class);
-        $update = $this->getUpdate(sprintf('/%s hello', $id));
-        $activeCommand
+        $handler->handle($update);
+    }
+
+    private function addInactiveCommand(): void
+    {
+        $result = $this->registerMock(TheSecondCommand::class);
+        $result->expects($this->never())
+            ->method('handle');
+
+        $this->resolver->addCommands([$result::class]);
+    }
+
+    private function addActiveCommand(string $idTemplate, string $expectedArgument): Update
+    {
+        $result = $this->registerMock(TheThirdOneCommand::class);
+        $id = $this->idExtractor->extract(new \ReflectionClass($result));
+        $update = $this->getUpdate(sprintf($idTemplate, $id));
+        $result
             ->expects($this->once())
             ->method('handle')
-            ->with('hello', $update);
-        $this->container->set($activeCommand::class, $activeCommand);
-        $handler->handle($update);
+            ->with($expectedArgument, $update);
+
+        $this->resolver->addCommands([$result::class]);
+
+        return $update;
     }
 
     private function getUpdate(string $messageText): Update
