@@ -32,17 +32,17 @@ class ContainerTest extends TestCase
         $this->assertInstanceOf(InjectableClass::class, $instance);
     }
 
-    public function testCreateSameInstance(): void
+    public function testCreateDiffInstance(): void
     {
-        $instance = $this->container->get(InjectableClass::class);
-        $this->assertSame($instance, $this->container->get(InjectableClass::class));
-    }
-
-    public function testCreateUniqueInstance(): void
-    {
-        $this->container->alwaysUnique(InjectableClass::class);
         $instance = $this->container->get(InjectableClass::class);
         $this->assertNotSame($instance, $this->container->get(InjectableClass::class));
+    }
+
+    public function testCreateSameInstance(): void
+    {
+        $this->container->withSingleton(InjectableClass::class);
+        $instance = $this->container->get(InjectableClass::class);
+        $this->assertSame($instance, $this->container->get(InjectableClass::class));
     }
 
     public function testCreateInstanceWithDependency(): void

@@ -19,9 +19,9 @@ class CommandResolver
     ) {
     }
 
-    public function resolve(string $commandId): ?CommandDefinition
+    public function resolve(string $commandId, ?CommandDefinition $default = null): ?CommandDefinition
     {
-        return $this->commands[$commandId] ?? $this->commands[self::DEFAULT_COMMAND_ID] ?? null;
+        return $this->commands[$commandId] ?? $this->getDefaultCommand($default);
     }
 
     public function addCommands(array $classNames): void
@@ -32,6 +32,11 @@ class CommandResolver
     public function setDefaultCommand(string $className): void
     {
         $this->addCommand($className, self::DEFAULT_COMMAND_ID);
+    }
+
+    public function getDefaultCommand(?CommandDefinition $default = null): ?CommandDefinition
+    {
+        return $default ?? $this->commands[self::DEFAULT_COMMAND_ID] ?? null;
     }
 
     private function addCommand(string $className, ?string $forceId = null): void

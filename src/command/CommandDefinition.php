@@ -13,6 +13,8 @@ class CommandDefinition
 
     private ?string $description;
 
+    private string $methodName = 'handle';
+
     public function __construct(
         private string $className,
         CommandIdExtractor $commandIdExtractor,
@@ -44,5 +46,18 @@ class CommandDefinition
     public function getClassName(): string
     {
         return $this->className;
+    }
+
+    public function getMethodName(): string
+    {
+        return $this->methodName;
+    }
+
+    public function setMethodName(string $methodName): static
+    {
+        $new = clone $this;
+        $new->methodName = $methodName;
+
+        return $new;
     }
 }

@@ -9,7 +9,7 @@ use Rezident\WiseTelegramBot\di\exceptions\WrongInstanceException;
 
 class Container
 {
-    private array $uniques = [];
+    private array $singletons = [];
 
     private array $instances = [];
 
@@ -25,6 +25,7 @@ class Container
         }
 
         $this->instances[$className] = $instance;
+        $this->withSingleton($className);
     }
 
     /**
@@ -36,16 +37,22 @@ class Container
      */
     public function get(string $className): object
     {
-        if (!isset($this->instances[$className]) || isset($this->uniques[$className])) {
+        if (!isset($this->singletons[$className])) {
+            return $this->createInstance($className);
+        }
+
+        if (!isset($this->instances[$className])) {
             $this->instances[$className] = $this->createInstance($className);
         }
 
         return $this->instances[$className];
     }
 
-    public function alwaysUnique(string $className): void
+    public function withSingleton(string $className): static
     {
-        $this->uniques[$className] = true;
+        $this->singletons[$className] = true;
+
+        return $this;
     }
 
     private function createInstance(string $className): object
