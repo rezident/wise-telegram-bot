@@ -16,13 +16,11 @@ use Rezident\WiseTelegramBot\update\UpdateHandler;
 
 class UpdateHandlerTest extends TestCase
 {
-    private CommandIdExtractor $idExtractor;
     private CommandResolver $resolver;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->idExtractor = $this->container->get(CommandIdExtractor::class);
         $this->resolver = $this->container->withSingleton(CommandResolver::class)->get(CommandResolver::class);
     }
 
@@ -31,8 +29,25 @@ class UpdateHandlerTest extends TestCase
         $this->addInactiveCommand();
         $update = $this->addActiveCommand('/%s hello', 'hello');
 
-        $handler = $this->container->get(UpdateHandler::class);
-        $handler->handle($update);
+        $this->container->get(UpdateHandler::class)->handle($update);
+    }
+
+    public function testHandleDefaultCommand(): void
+    {
+        $this->addInactiveCommand();
+        $update = $this->addActiveCommand('/%s help', 'help', true);
+        $update->getMessage()->text('/bad_cmd help');
+
+        $this->container->get(UpdateHandler::class)->handle($update);
+    }
+
+    public function testHandleDefaultCommandWithTextOnly(): void
+    {
+        $this->addInactiveCommand();
+        $update = $this->addActiveCommand('/%s prisma', 'prisma', true);
+        $update->getMessage()->text('prisma');
+
+        $this->container->get(UpdateHandler::class)->handle($update);
     }
 
     private function addInactiveCommand(): void
@@ -44,17 +59,21 @@ class UpdateHandlerTest extends TestCase
         $this->resolver->addCommands([$result::class]);
     }
 
-    private function addActiveCommand(string $idTemplate, string $expectedArgument): Update
+    private function addActiveCommand(string $idTemplate, string $expectedArgument, bool $asDefault = false): Update
     {
         $result = $this->registerMock(TheThirdOneCommand::class);
-        $id = $this->idExtractor->extract(new \ReflectionClass($result));
+        $id = $this->container->get(CommandIdExtractor::class)->extract(new \ReflectionClass($result));
         $update = $this->getUpdate(sprintf($idTemplate, $id));
         $result
             ->expects($this->once())
             ->method('handle')
             ->with($expectedArgument, $update);
 
-        $this->resolver->addCommands([$result::class]);
+        if ($asDefault) {
+            $this->resolver->setDefaultCommand($result::class);
+        } else {
+            $this->resolver->addCommands([$result::class]);
+        }
 
         return $update;
     }
