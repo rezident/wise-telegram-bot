@@ -19,10 +19,10 @@
     ],
     "require": {
         "php": "^8.0",
-        "rezident/self-documented-telegram-bot-sdk": "^6.4",
-        "friendsofphp/php-cs-fixer": "^3.13"
+        "rezident/self-documented-telegram-bot-sdk": "^6.4"
     },
     "require-dev": {
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "friendsofphp/php-cs-fixer": "^3.14"
     }
 }
