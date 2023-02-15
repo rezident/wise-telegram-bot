@@ -17,16 +17,25 @@ class UpdatesWatcherTest extends TestCase
     public function testWatchWithUpdate(): void
     {
         $updates = [include __DIR__ . '/stub/update.php'];
+        $this->registerWatcherMocks($updates, self::CALL_COUNT);
+        $this->container->get(UpdatesWatcher::class)->watch(self::CALL_COUNT);
+    }
 
+    public function testWatchWithoutUpdate(): void
+    {
+        $this->registerWatcherMocks([], 0);
+        $this->container->get(UpdatesWatcher::class)->watch(self::CALL_COUNT);
+    }
+
+    private function registerWatcherMocks(array $updates, int $handlerCalls): void
+    {
         $this->registerMock(Executor::class)
             ->expects($this->exactly(self::CALL_COUNT))
             ->method('execute')
             ->willReturn($updates);
         $this->registerMock(UpdateHandler::class)
-            ->expects($this->exactly(self::CALL_COUNT))
+            ->expects($this->exactly($handlerCalls))
             ->method('handle')
             ->with($this->isInstanceOf(Update::class));
-
-        $this->container->get(UpdatesWatcher::class)->watch(self::CALL_COUNT);
     }
 }
