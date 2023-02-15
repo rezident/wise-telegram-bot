@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\update;
 
-use Rezident\SelfDocumentedTelegramBotSdk\types\Chat;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
-use Rezident\SelfDocumentedTelegramBotSdk\types\Message;
 use Rezident\WiseTelegramBot\command\CommandIdExtractor;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
@@ -80,9 +78,9 @@ class UpdateHandlerTest extends TestCase
 
     private function getUpdate(string $messageText): Update
     {
-        $chat = Chat::new(1, 'private');
-        $message = Message::new(1, 1, $chat)->text($messageText);
+        $update = Update::fromArray(include __DIR__ . '/stub/update.php');
+        $update->getMessage()->text($messageText);
 
-        return Update::new(1)->message($message);
+        return $update;
     }
 }
