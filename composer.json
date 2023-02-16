@@ -19,7 +19,7 @@
     ],
     "require": {
         "php": "^8.0",
-        "rezident/self-documented-telegram-bot-sdk": "^6.4"
+        "rezident/self-documented-telegram-bot-sdk": "^6.5"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5",
