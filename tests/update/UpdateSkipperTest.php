@@ -6,6 +6,7 @@ namespace Rezident\WiseTelegramBot\tests\update;
 
 use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\methods\GettingUpdates\GetUpdatesMethod;
+use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
 use Rezident\WiseTelegramBot\update\UpdateSkipper;
 
@@ -13,13 +14,16 @@ class UpdateSkipperTest extends TestCase
 {
     public function testSkip(): void
     {
-        $mock = $this->createMock(Executor::class);
-        $mock->expects($this->once())
+        $this->registerMock(Executor::class)
+            ->expects($this->once())
             ->method('execute')
-            ->willReturn([])
+            ->willReturn([include __DIR__ . '/stub/update.php'])
             ->with($this->isInstanceOf(GetUpdatesMethod::class));
+        $this->registerMock(UpdateOffsetCalculator::class)
+            ->expects($this->once())
+            ->method('calculate')
+            ->with($this->isInstanceOf(Update::class));
 
-        $skipper = new UpdateSkipper($mock);
-        $skipper->skip();
+        $this->container->get(UpdateSkipper::class)->skip();
     }
 }
