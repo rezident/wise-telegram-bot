@@ -18,7 +18,7 @@ class Container
         $this->set(self::class, $this);
     }
 
-    public function set(string $className, object $instance): void
+    public function set(string $className, object $instance): static
     {
         if (!$instance instanceof $className) {
             throw new WrongInstanceException($className);
@@ -26,6 +26,8 @@ class Container
 
         $this->instances[$className] = $instance;
         $this->withSingleton($className);
+
+        return $this;
     }
 
     /**

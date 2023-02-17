@@ -4,16 +4,13 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot;
 
-use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\WiseTelegramBot\bot\BotImplementation;
-use Rezident\WiseTelegramBot\di\Container;
+use Rezident\WiseTelegramBot\di\BotContainerFactory;
 
 class Bot extends BotImplementation
 {
     public function __construct(string $token)
     {
-        $container = new Container();
-        $container->set(Executor::class, new Executor($token));
-        parent::__construct($container);
+        parent::__construct(BotContainerFactory::getContainer($token));
     }
 }
