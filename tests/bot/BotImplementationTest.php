@@ -4,15 +4,24 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\bot;
 
+use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\bot\BotImplementation;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\reader\ClassNamesReader;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
 use Rezident\WiseTelegramBot\update\UpdateHandler;
+use Rezident\WiseTelegramBot\update\UpdateSkipper;
+use Rezident\WiseTelegramBot\update\UpdatesWatcher;
 
 class BotImplementationTest extends TestCase
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+        $this->registerMock(Executor::class);
+    }
+
     public function testHandleUpdate(): void
     {
         $this->registerMock(UpdateHandler::class)
@@ -20,8 +29,7 @@ class BotImplementationTest extends TestCase
             ->method('handle')
             ->with($this->isInstanceOf(Update::class));
 
-        $bot = new BotImplementation($this->container);
-        $bot->handleUpdate(['update_id' => 16]);
+        $this->container->get(BotImplementation::class)->handleUpdate(['update_id' => 16]);
     }
 
     public function testReadCommands(): void
@@ -39,8 +47,7 @@ class BotImplementationTest extends TestCase
             ->method('addCommands')
             ->with($classesList);
 
-        $bot = new BotImplementation($this->container);
-        $bot->readCommands(__DIR__);
+        $this->container->get(BotImplementation::class)->readCommands(__DIR__);
     }
 
     public function testSetDefaultCommand(): void
@@ -50,7 +57,19 @@ class BotImplementationTest extends TestCase
             ->method('setDefaultCommand')
             ->with(__CLASS__);
 
-        $bot = new BotImplementation($this->container);
-        $bot->setDefaultCommand(__CLASS__);
+        $this->container->get(BotImplementation::class)->setDefaultCommand(__CLASS__);
+    }
+
+    public function testRun(): void
+    {
+        $this->registerMock(UpdateSkipper::class)
+            ->expects($this->once())
+            ->method('skip');
+        $this->registerMock(UpdatesWatcher::class)
+            ->expects($this->once())
+            ->method('watch')
+            ->with(null);
+
+        $this->container->get(BotImplementation::class)->run();
     }
 }
