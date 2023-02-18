@@ -4,15 +4,21 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\update;
 
+use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
+use Rezident\WiseTelegramBot\command\CommandAnswerCreator;
 use Rezident\WiseTelegramBot\command\CommandDefinition;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\di\Container;
 
 class UpdateHandler
 {
-    public function __construct(private CommandResolver $commandResolver, private Container $container)
-    {
+    public function __construct(
+        private CommandResolver $commandResolver,
+        private Container $container,
+        private CommandAnswerCreator $commandAnswerCreator,
+        private Executor $executor,
+    ) {
     }
 
     public function handle(Update $update): void
@@ -23,7 +29,11 @@ class UpdateHandler
         }
         $command = $this->container->get($commandDefinition->getClassName());
         $callable = [$command, $commandDefinition->getMethodName()];
-        \call_user_func($callable, $this->getArgument($update), $update);
+
+        $callResult = \call_user_func($callable, $this->getArgument($update), $update);
+
+        $sendMessageCommand = $this->commandAnswerCreator->create($update, $callResult);
+        $sendMessageCommand?->exec($this->executor);
     }
 
     private function getCommandId(string $messageText): ?string

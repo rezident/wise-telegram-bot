@@ -4,7 +4,10 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\tests\update;
 
+use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
+use Rezident\SelfDocumentedTelegramBotSdk\methods\SendMessageMethod;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
+use Rezident\WiseTelegramBot\command\CommandAnswerCreator;
 use Rezident\WiseTelegramBot\command\CommandIdExtractor;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
@@ -14,12 +17,15 @@ use Rezident\WiseTelegramBot\update\UpdateHandler;
 
 class UpdateHandlerTest extends TestCase
 {
+    private const ACTIVE_COMMAND_RETURN = 'returned text';
+
     private CommandResolver $resolver;
 
     protected function setUp(): void
     {
         parent::setUp();
         $this->resolver = $this->container->withSingleton(CommandResolver::class)->get(CommandResolver::class);
+        $this->registerMock(Executor::class);
     }
 
     public function testHandleSpecifiedCommand(): void
@@ -48,6 +54,24 @@ class UpdateHandlerTest extends TestCase
         $this->container->get(UpdateHandler::class)->handle($update);
     }
 
+    public function testCallCommandAnswerCommand(): void
+    {
+        $update = $this->addActiveCommand('/%s', '', false, self::ACTIVE_COMMAND_RETURN);
+        $this->addInactiveCommand();
+        $sendMessageMethodMock = $this->createMock(SendMessageMethod::class);
+        $sendMessageMethodMock
+            ->expects($this->once())
+            ->method('exec');
+
+        $this->registerMock(CommandAnswerCreator::class)
+            ->expects($this->once())
+            ->method('create')
+            ->with($update, self::ACTIVE_COMMAND_RETURN)
+            ->willReturn($sendMessageMethodMock);
+
+        $this->container->get(UpdateHandler::class)->handle($update);
+    }
+
     private function addInactiveCommand(): void
     {
         $result = $this->registerMock(TheSecondCommand::class);
@@ -57,14 +81,19 @@ class UpdateHandlerTest extends TestCase
         $this->resolver->addCommands([$result::class]);
     }
 
-    private function addActiveCommand(string $idTemplate, string $expectedArgument, bool $asDefault = false): Update
-    {
+    private function addActiveCommand(
+        string $idTemplate,
+        string $expectedArgument,
+        bool $asDefault = false,
+        ?string $willReturn = null,
+    ): Update {
         $result = $this->registerMock(TheThirdOneCommand::class);
         $id = $this->container->get(CommandIdExtractor::class)->extract(new \ReflectionClass($result));
         $update = $this->getUpdate(sprintf($idTemplate, $id));
         $result
             ->expects($this->once())
             ->method('handle')
+            ->willReturn($willReturn)
             ->with($expectedArgument, $update);
 
         if ($asDefault) {
