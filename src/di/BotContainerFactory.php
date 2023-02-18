@@ -7,6 +7,7 @@ namespace Rezident\WiseTelegramBot\di;
 use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\tests\update\UpdateOffsetCalculator;
+use Rezident\WiseTelegramBot\update\UpdateFilter;
 
 class BotContainerFactory
 {
@@ -14,6 +15,7 @@ class BotContainerFactory
     {
         return (new Container())
             ->withSingleton(UpdateOffsetCalculator::class)
+            ->withSingleton(UpdateFilter::class)
             ->withSingleton(CommandResolver::class)
             ->set(Executor::class, new Executor($botToken));
     }

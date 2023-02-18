@@ -10,6 +10,7 @@ use Rezident\WiseTelegramBot\di\BotContainerFactory;
 use Rezident\WiseTelegramBot\di\Container;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
 use Rezident\WiseTelegramBot\tests\update\UpdateOffsetCalculator;
+use Rezident\WiseTelegramBot\update\UpdateFilter;
 
 class BotContainerFactoryTest extends TestCase
 {
@@ -38,5 +39,11 @@ class BotContainerFactoryTest extends TestCase
     {
         $container = BotContainerFactory::getContainer('');
         $this->assertSame($container->get(Executor::class), $container->get(Executor::class));
+    }
+
+    public function testGetSameUpdateFilter(): void
+    {
+        $container = BotContainerFactory::getContainer('');
+        $this->assertSame($container->get(UpdateFilter::class), $container->get(UpdateFilter::class));
     }
 }

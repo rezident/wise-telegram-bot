@@ -13,6 +13,7 @@ use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
 use Rezident\WiseTelegramBot\tests\command\stub\TheSecondCommand;
 use Rezident\WiseTelegramBot\tests\command\stub\TheThirdOneCommand;
+use Rezident\WiseTelegramBot\update\UpdateFilter;
 use Rezident\WiseTelegramBot\update\UpdateHandler;
 
 class UpdateHandlerTest extends TestCase
@@ -68,6 +69,18 @@ class UpdateHandlerTest extends TestCase
             ->method('create')
             ->with($update, self::ACTIVE_COMMAND_RETURN)
             ->willReturn($sendMessageMethodMock);
+
+        $this->container->get(UpdateHandler::class)->handle($update);
+    }
+
+    public function testCallUpdateFilter(): void
+    {
+        $update = $this->addActiveCommand('/%s hello', 'hello');
+        $this->registerMock(UpdateFilter::class)
+            ->expects($this->once())
+            ->method('filter')
+            ->willReturn($update)
+            ->with($update);
 
         $this->container->get(UpdateHandler::class)->handle($update);
     }

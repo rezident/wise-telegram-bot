@@ -9,7 +9,9 @@ use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\bot\BotImplementation;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\reader\ClassNamesReader;
+use Rezident\WiseTelegramBot\tests\base\Random;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
+use Rezident\WiseTelegramBot\update\UpdateFilter;
 use Rezident\WiseTelegramBot\update\UpdateHandler;
 use Rezident\WiseTelegramBot\update\UpdateSkipper;
 use Rezident\WiseTelegramBot\update\UpdatesWatcher;
@@ -71,5 +73,16 @@ class BotImplementationTest extends TestCase
             ->with(null);
 
         $this->container->get(BotImplementation::class)->run();
+    }
+
+    public function testAcceptOnly(): void
+    {
+        $chatId = Random::int();
+        $this->registerMock(UpdateFilter::class)
+            ->expects($this->once())
+            ->method('byChatId')
+            ->with($chatId);
+
+        $this->container->get(BotImplementation::class)->acceptOnly($chatId);
     }
 }

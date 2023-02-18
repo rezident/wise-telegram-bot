@@ -14,15 +14,21 @@ use Rezident\WiseTelegramBot\di\Container;
 class UpdateHandler
 {
     public function __construct(
+        private CommandAnswerCreator $commandAnswerCreator,
         private CommandResolver $commandResolver,
         private Container $container,
-        private CommandAnswerCreator $commandAnswerCreator,
         private Executor $executor,
+        private UpdateFilter $updateFilter,
     ) {
     }
 
     public function handle(Update $update): void
     {
+        $update = $this->updateFilter->filter($update);
+        if (null === $update) {
+            return;
+        }
+
         $commandDefinition = $this->getCommandDefinition($update);
         if (!$commandDefinition) {
             return;
