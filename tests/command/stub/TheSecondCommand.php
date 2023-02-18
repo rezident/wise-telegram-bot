@@ -11,7 +11,8 @@ use Rezident\WiseTelegramBot\command\Description;
 #[Description('The description of the_second command')]
 class TheSecondCommand implements CommandInterface
 {
-    public function handle(string $argument, Update $update): void
+    public function handle(string $argument, Update $update): string|array|null
     {
+        return null;
     }
 }

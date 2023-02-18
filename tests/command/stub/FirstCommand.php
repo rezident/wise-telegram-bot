@@ -9,7 +9,8 @@ use Rezident\WiseTelegramBot\command\CommandInterface;
 
 class FirstCommand implements CommandInterface
 {
-    public function handle(string $argument, Update $update): void
+    public function handle(string $argument, Update $update): string|array|null
     {
+        return null;
     }
 }

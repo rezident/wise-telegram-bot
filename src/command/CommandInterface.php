@@ -8,5 +8,5 @@ use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 
 interface CommandInterface
 {
-    public function handle(string $argument, Update $update);
+    public function handle(string $argument, Update $update): string|array|null;
 }

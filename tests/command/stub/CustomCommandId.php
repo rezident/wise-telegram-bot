@@ -11,7 +11,8 @@ use Rezident\WiseTelegramBot\command\Id;
 #[Id('custom_id')]
 class CustomCommandId implements CommandInterface
 {
-    public function handle(string $argument, Update $update): void
+    public function handle(string $argument, Update $update): string|array|null
     {
+        return null;
     }
 }
