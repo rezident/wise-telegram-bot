@@ -17,6 +17,6 @@ class StartCommand implements CommandInterface
 
     public function handle(string $argument, Update $update): void
     {
-        SendMessageMethod::new($update->getMessage()->getSenderChat()->getId(), 'привет')->exec($this->executor);
+        SendMessageMethod::new($update->getMessage()->getChat()->getId(), 'привет')->exec($this->executor);
     }
 }
