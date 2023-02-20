@@ -9,6 +9,8 @@ use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 
 class CommandAnswerCreator
 {
+    private const PARSE_MODE_MARKDOWN_V2 = 'MarkdownV2';
+
     public function create(Update $incomingUpdate, string|array|null $commandAnswer): ?SendMessageMethod
     {
         if (null === $commandAnswer) {
@@ -19,7 +21,8 @@ class CommandAnswerCreator
             implode(\PHP_EOL, array_map('strval', $commandAnswer)) :
             $commandAnswer;
 
-        return SendMessageMethod::new($incomingUpdate->getMessage()->getChat()->getId(), $text)
-            ->parseMode('MarkdownV2');
+        $result = SendMessageMethod::new($incomingUpdate->getMessage()->getChat()->getId(), $text);
+
+        return \is_array($commandAnswer) ? $result->parseMode(self::PARSE_MODE_MARKDOWN_V2) : $result;
     }
 }

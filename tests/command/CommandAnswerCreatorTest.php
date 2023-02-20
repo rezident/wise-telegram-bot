@@ -45,8 +45,13 @@ class CommandAnswerCreatorTest extends TestCase
     {
         $this->assertEquals(
             self::EXPECTED_PARSE_MODE,
-            $this->creator->create($this->update, '')->toArray()['parse_mode'],
+            $this->creator->create($this->update, [''])->toArray()['parse_mode'],
         );
+    }
+
+    public function testCreateWithoutParseMode(): void
+    {
+        $this->assertNull($this->creator->create($this->update, '')->toArray()['parse_mode'] ?? null);
     }
 
     public function testCreateWithMultiline(): void
