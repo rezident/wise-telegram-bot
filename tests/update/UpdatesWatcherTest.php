@@ -9,6 +9,7 @@ use Rezident\SelfDocumentedTelegramBotSdk\methods\GettingUpdates\GetUpdatesMetho
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
 use Rezident\WiseTelegramBot\update\UpdateHandler;
+use Rezident\WiseTelegramBot\update\UpdateOffsetCalculator;
 use Rezident\WiseTelegramBot\update\UpdatesWatcher;
 
 class UpdatesWatcherTest extends TestCase

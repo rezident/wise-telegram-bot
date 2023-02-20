@@ -6,7 +6,6 @@ namespace Rezident\WiseTelegramBot\update;
 
 use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\methods\GettingUpdates\GetUpdatesMethod;
-use Rezident\WiseTelegramBot\tests\update\UpdateOffsetCalculator;
 
 class UpdatesWatcher
 {

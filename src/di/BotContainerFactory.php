@@ -6,8 +6,8 @@ namespace Rezident\WiseTelegramBot\di;
 
 use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\WiseTelegramBot\command\CommandResolver;
-use Rezident\WiseTelegramBot\tests\update\UpdateOffsetCalculator;
 use Rezident\WiseTelegramBot\update\UpdateFilter;
+use Rezident\WiseTelegramBot\update\UpdateOffsetCalculator;
 
 class BotContainerFactory
 {

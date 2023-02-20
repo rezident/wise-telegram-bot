@@ -8,6 +8,7 @@ use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\methods\GettingUpdates\GetUpdatesMethod;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
+use Rezident\WiseTelegramBot\update\UpdateOffsetCalculator;
 use Rezident\WiseTelegramBot\update\UpdateSkipper;
 
 class UpdateSkipperTest extends TestCase
