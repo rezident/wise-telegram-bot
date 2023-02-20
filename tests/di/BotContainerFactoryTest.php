@@ -9,8 +9,8 @@ use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\di\BotContainerFactory;
 use Rezident\WiseTelegramBot\di\Container;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
-use Rezident\WiseTelegramBot\tests\update\UpdateOffsetCalculator;
 use Rezident\WiseTelegramBot\update\UpdateFilter;
+use Rezident\WiseTelegramBot\update\UpdateOffsetCalculator;
 
 class BotContainerFactoryTest extends TestCase
 {

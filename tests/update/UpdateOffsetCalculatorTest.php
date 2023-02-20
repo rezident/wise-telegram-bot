@@ -6,6 +6,7 @@ namespace Rezident\WiseTelegramBot\tests\update;
 
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\tests\base\TestCase;
+use Rezident\WiseTelegramBot\update\UpdateOffsetCalculator;
 
 class UpdateOffsetCalculatorTest extends TestCase
 {

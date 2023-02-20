@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace Rezident\WiseTelegramBot\tests\update;
+namespace Rezident\WiseTelegramBot\update;
 
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 
