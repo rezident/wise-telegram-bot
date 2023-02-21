@@ -85,4 +85,10 @@ class BotImplementationTest extends TestCase
 
         $this->container->get(BotImplementation::class)->acceptOnly($chatId);
     }
+
+    public function testGetExecutor(): void
+    {
+        $executor = $this->registerMock(Executor::class);
+        $this->assertSame($executor, $this->container->get(BotImplementation::class)->getExecutor());
+    }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace Rezident\WiseTelegramBot\bot;
 
+use Rezident\SelfDocumentedTelegramBotSdk\components\Executor;
 use Rezident\SelfDocumentedTelegramBotSdk\types\GettingUpdates\Update;
 use Rezident\WiseTelegramBot\command\CommandResolver;
 use Rezident\WiseTelegramBot\di\Container;
@@ -63,5 +64,10 @@ class BotImplementation
     {
         $this->updateSkipper->skip();
         $this->updatesWatcher->watch();
+    }
+
+    public function getExecutor(): Executor
+    {
+        return $this->container->get(Executor::class);
     }
 }
