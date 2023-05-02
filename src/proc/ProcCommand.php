@@ -13,26 +13,18 @@ class ProcCommand
         $this->parts = [$command];
     }
 
-    public function addArgument(string $argument): static
-    {
-        $quote = str_contains($argument, '"') ? "'" : '"';
-        $this->parts[] = sprintf('%s%s%s', $quote, $argument, $quote);
-
-        return $this;
-    }
-
     public function addOption(string $option, ?string $argument = null): static
     {
         $this->parts[] = $option;
         if ($argument) {
-            $this->addArgument($argument);
+            $this->parts[] = $argument;
         }
 
         return $this;
     }
 
-    public function getCommandLine(): string
+    public function getParts(): array
     {
-        return trim(implode(' ', $this->parts));
+        return $this->parts;
     }
 }

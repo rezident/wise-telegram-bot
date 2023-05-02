@@ -21,48 +21,32 @@ class ProcCommandTest extends TestCase
 
     public function testCommandLine(): void
     {
-        $this->assertEquals(self::CMD, $this->command->getCommandLine());
+        $this->assertEquals([self::CMD], $this->command->getParts());
     }
 
-    public function testCommandLineWithArgument(): void
+    public function testCommandPartsWithSingleOption(): void
+    {
+        $this->assertEquals([self::CMD, '-h'], $this->command->addOption('-h')->getParts());
+    }
+
+    public function testCommandPartsWithOptionAndArgument(): void
     {
         $this->assertEquals(
-            sprintf('%s "argument"', self::CMD),
-            $this->command->addArgument('argument')->getCommandLine(),
-        );
-    }
-
-    public function testCommandLineWithRightQuoteArgument(): void
-    {
-        $this->assertEquals(
-            sprintf('%s \'"argument"\'', self::CMD),
-            $this->command->addArgument('"argument"')->getCommandLine(),
-        );
-    }
-
-    public function testCommandLineWithSingleOption(): void
-    {
-        $this->assertEquals(sprintf('%s -h', self::CMD), $this->command->addOption('-h')->getCommandLine());
-    }
-
-    public function testCommandLineWithOptionAndArgument(): void
-    {
-        $this->assertEquals(
-            sprintf('%s -h "option argument"', self::CMD),
-            $this->command->addOption('-h', 'option argument')->getCommandLine(),
+            [self::CMD, '-h', 'option argument'],
+            $this->command->addOption('-h', 'option argument')->getParts(),
         );
     }
 
     public function testBigCommandLine(): void
     {
         $this->assertEquals(
-            sprintf('%s -r -h "option argument" -z \'hello"\' "last argument"', self::CMD),
+            [self::CMD, '-r', '-h', 'option argument', '-z', 'hello"', 'last argument'],
             $this->command
                 ->addOption('-r')
                 ->addOption('-h', 'option argument')
                 ->addOption('-z', 'hello"')
-                ->addArgument('last argument')
-                ->getCommandLine(),
+                ->addOption('last argument')
+                ->getParts(),
         );
     }
 }
