@@ -53,4 +53,13 @@ class PipesTest extends TestCase
         $this->assertEquals('', $pipes->pullStderr());
         $this->assertEquals('', $pipes->pullStdout());
     }
+
+    public function testClosePipes(): void
+    {
+        $currentFile = fopen(__FILE__, 'r');
+        $pipes = new Pipes([$currentFile, $currentFile, $currentFile]);
+        $this->assertIsNotClosedResource($currentFile);
+        $pipes->close();
+        $this->assertIsClosedResource($currentFile);
+    }
 }

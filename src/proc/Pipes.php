@@ -48,6 +48,11 @@ class Pipes
         return $this->pullAndClearBuffer(self::ERR);
     }
 
+    public function close(): void
+    {
+        array_walk($this->streams, fn ($stream) => \is_resource($stream) && fclose($stream));
+    }
+
     private function pullAndClearBuffer(int $index): string
     {
         $this->readStreams();
@@ -68,6 +73,6 @@ class Pipes
 
     private function unblockStreams(): void
     {
-        array_walk($this->streams, fn ($pipe) => stream_set_blocking($pipe, false));
+        array_walk($this->streams, fn ($stream) => stream_set_blocking($stream, false));
     }
 }
