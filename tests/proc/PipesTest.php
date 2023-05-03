@@ -35,4 +35,22 @@ class PipesTest extends TestCase
         new Pipes([$stream, $stream, $stream]);
         $this->assertFalse(stream_get_meta_data($stream)['blocked']);
     }
+
+    public function testPullStdout(): void
+    {
+        $currentFile = fopen(__FILE__, 'r');
+        $pipes = new Pipes([$currentFile, $currentFile, fopen('data://text/plain;base64,', 'r')]);
+        $this->assertEquals(file_get_contents(__FILE__), $pipes->pullStdout());
+        $this->assertEquals('', $pipes->pullStdout());
+        $this->assertEquals('', $pipes->pullStderr());
+    }
+
+    public function testPullStderr(): void
+    {
+        $currentFile = fopen(__FILE__, 'r');
+        $pipes = new Pipes([$currentFile, fopen('data://text/plain;base64,', 'r'), $currentFile]);
+        $this->assertEquals(file_get_contents(__FILE__), $pipes->pullStderr());
+        $this->assertEquals('', $pipes->pullStderr());
+        $this->assertEquals('', $pipes->pullStdout());
+    }
 }

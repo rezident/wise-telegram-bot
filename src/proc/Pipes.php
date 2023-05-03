@@ -11,8 +11,12 @@ class Pipes
 {
     public const DESCRIPTOR = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
 
+    private const READ_BUFFER_SIZE = 8192;
+
     private const OUT = 1;
     private const ERR = 2;
+
+    private array $streamsBuffer = [];
 
     /**
      * @var resource[]
@@ -30,7 +34,36 @@ class Pipes
         }
 
         $this->streams = $streams;
+        $this->streamsBuffer = array_fill(0, \count($streams), '');
         $this->unblockStreams();
+    }
+
+    public function pullStdout(): string
+    {
+        return $this->pullAndClearBuffer(self::OUT);
+    }
+
+    public function pullStderr(): string
+    {
+        return $this->pullAndClearBuffer(self::ERR);
+    }
+
+    private function pullAndClearBuffer(int $index): string
+    {
+        $this->readStreams();
+        $result = $this->streamsBuffer[$index];
+        $this->streamsBuffer[$index] = '';
+
+        return $result;
+    }
+
+    private function readStreams(): void
+    {
+        foreach ([self::OUT, self::ERR] as $index) {
+            while ($data = fread($this->streams[$index], self::READ_BUFFER_SIZE)) {
+                $this->streamsBuffer[$index] .= $data;
+            }
+        }
     }
 
     private function unblockStreams(): void
