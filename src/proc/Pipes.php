@@ -17,16 +17,24 @@ class Pipes
     /**
      * @var resource[]
      */
-    private array $pipes;
+    private array $streams;
 
-    public function __construct(array $pipes)
+    public function __construct(array $streams)
     {
-        if (\count(static::DESCRIPTOR) !== \count($pipes)) {
-            throw new WrongArraySizeException(\count($pipes));
+        if (\count(static::DESCRIPTOR) !== \count($streams)) {
+            throw new WrongArraySizeException(\count($streams));
         }
 
-        if (\count(array_filter($pipes, fn ($pipe) => !\is_resource($pipe))) > 0) {
+        if (\count(array_filter($streams, fn ($pipe) => !\is_resource($pipe))) > 0) {
             throw new ArrayItemsIsNotResourcesException();
         }
+
+        $this->streams = $streams;
+        $this->unblockStreams();
+    }
+
+    private function unblockStreams(): void
+    {
+        array_walk($this->streams, fn ($pipe) => stream_set_blocking($pipe, false));
     }
 }

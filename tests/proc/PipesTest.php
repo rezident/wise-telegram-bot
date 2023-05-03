@@ -27,4 +27,12 @@ class PipesTest extends TestCase
         $this->expectException(ArrayItemsIsNotResourcesException::class);
         new Pipes(array_fill(0, \count(Pipes::DESCRIPTOR), 0));
     }
+
+    public function testCreatePipesWithUnBlockStreams(): void
+    {
+        $stream = fopen(__FILE__, 'r');
+        $this->assertTrue(stream_get_meta_data($stream)['blocked']);
+        new Pipes([$stream, $stream, $stream]);
+        $this->assertFalse(stream_get_meta_data($stream)['blocked']);
+    }
 }
