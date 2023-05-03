@@ -15,12 +15,14 @@ class ProcCommand
 
     public function addOption(string $option, ?string $argument = null): static
     {
-        $this->parts[] = $option;
+        $newThis = clone $this;
+
+        $newThis->parts[] = $option;
         if ($argument) {
-            $this->parts[] = $argument;
+            $newThis->parts[] = $argument;
         }
 
-        return $this;
+        return $newThis;
     }
 
     public function getParts(): array

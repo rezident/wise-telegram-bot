@@ -49,4 +49,12 @@ class ProcCommandTest extends TestCase
                 ->getParts(),
         );
     }
+
+    public function testImmutability(): void
+    {
+        $withOneOption = $this->command->addOption('-h');
+        $this->assertEquals([self::CMD, '-h'], $withOneOption->getParts());
+        $this->assertEquals([self::CMD, '-h', '-a', 'hello'], $withOneOption->addOption('-a', 'hello')->getParts());
+        $this->assertEquals([self::CMD, '-h'], $withOneOption->getParts());
+    }
 }
