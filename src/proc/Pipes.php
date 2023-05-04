@@ -9,7 +9,7 @@ use Rezident\WiseTelegramBot\proc\exceptions\WrongArraySizeException;
 
 class Pipes
 {
-    public const DESCRIPTOR = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
+    public const DESCRIPTORS = [['pipe', 'r'], ['pipe', 'w'], ['pipe', 'w']];
 
     private const READ_BUFFER_SIZE = 8192;
 
@@ -25,7 +25,7 @@ class Pipes
 
     public function __construct(array $streams)
     {
-        if (\count(static::DESCRIPTOR) !== \count($streams)) {
+        if (\count(static::DESCRIPTORS) !== \count($streams)) {
             throw new WrongArraySizeException(\count($streams));
         }
 
