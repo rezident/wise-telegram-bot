@@ -13,8 +13,6 @@ class Process
 
     private Pipes $pipes;
 
-    private ?int $exitCode = null;
-
     public function __construct(ProcCommand $command)
     {
         $this->process = proc_open($command->getParts(), Pipes::DESCRIPTORS, $pipesArray);
@@ -23,16 +21,36 @@ class Process
 
     public function isRunning(): bool
     {
-        return proc_get_status($this->process)['running'];
+        return $this->getProcessStatus()['running'];
     }
 
     public function getExitCode(): ?int
     {
-        $exitCodeValue = proc_get_status($this->process)['exitcode'];
-        if ($exitCodeValue >= 0) {
-            $this->exitCode = $exitCodeValue;
+        return $this->getProcessStatus()['exitcode'] >= 0 ? $this->getProcessStatus()['exitcode'] : null;
+    }
+
+    public function sync(): void
+    {
+        while ($this->isRunning()) {
+            // do nothing
+        }
+    }
+
+    public function getPipes(): Pipes
+    {
+        return $this->pipes;
+    }
+
+    private function getProcessStatus()
+    {
+        static $exitCode = -1;
+        $status = proc_get_status($this->process);
+        if ($status['exitcode'] >= 0) {
+            $exitCode = $status['exitcode'];
         }
 
-        return $this->exitCode;
+        $status['exitcode'] = $exitCode;
+
+        return $status;
     }
 }

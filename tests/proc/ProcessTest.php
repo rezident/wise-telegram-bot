@@ -26,12 +26,25 @@ class ProcessTest extends TestCase
         $this->assertFalse($process->isRunning());
     }
 
+    public function testSync()
+    {
+        $process = new Process(new ProcCommand('ls'));
+        $process->sync();
+        $this->assertSame(0, $process->getExitCode());
+    }
+
     public function testGetExitCode(): void
     {
         $process = new Process((new ProcCommand('bash'))->addOption('-c', 'exit 5'));
-        while (null === $process->getExitCode()) {
-        }
+        $process->sync();
         $this->assertSame(5, $process->getExitCode());
+    }
+
+    public function testPullStdout()
+    {
+        $process = new Process((new ProcCommand('echo'))->addOption('hello'));
+        $process->sync();
+        $this->assertSame('hello', trim($process->getPipes()->pullStdout()));
     }
 
     private function getSleepCommand(): ProcCommand
