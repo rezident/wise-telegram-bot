@@ -18,6 +18,14 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
+    public function testIsRunning()
+    {
+        $process = new Process($this->getSleepCommand());
+        $this->assertTrue($process->isRunning());
+        $this->killSleepCommand();
+        $this->assertFalse($process->isRunning());
+    }
+
     private function getSleepCommand(): ProcCommand
     {
         return (new ProcCommand('sleep'))->addOption('5');
