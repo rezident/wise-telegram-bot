@@ -18,12 +18,20 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
-    public function testIsRunning()
+    public function testIsRunning(): void
     {
         $process = new Process($this->getSleepCommand());
         $this->assertTrue($process->isRunning());
         $this->killSleepCommand();
         $this->assertFalse($process->isRunning());
+    }
+
+    public function testGetExitCode(): void
+    {
+        $process = new Process((new ProcCommand('bash'))->addOption('-c', 'exit 5'));
+        while (null === $process->getExitCode()) {
+        }
+        $this->assertSame(5, $process->getExitCode());
     }
 
     private function getSleepCommand(): ProcCommand
