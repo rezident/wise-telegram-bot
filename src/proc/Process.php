@@ -66,6 +66,16 @@ class Process
         $this->isRunning = false;
     }
 
+    public function isOk(): bool
+    {
+        return 0 === $this->getExitCode();
+    }
+
+    public function isFail(): bool
+    {
+        return !$this->isOk();
+    }
+
     private function updateProcessStatus(): void
     {
         if (!\is_resource($this->process)) {

@@ -64,7 +64,7 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
-    public function testKillProcessOnDestruct()
+    public function testKillProcessOnDestruct(): void
     {
         $process = new Process($this->getSleepCommand());
         $this->assertNotNull($this->getSleepCommandPid());
@@ -72,11 +72,25 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
-    public function testPullStdoutAfterSync()
+    public function testPullStdoutAfterSync(): void
     {
         $process = new Process((new ProcCommand('cat'))->addOption(__FILE__));
         $process->sync();
         $this->assertSame(file_get_contents(__FILE__), $process->getPipes()->pullStdout());
+    }
+
+    public function testIsOk(): void
+    {
+        $process = new Process(new ProcCommand('ls'));
+        $process->sync();
+        $this->assertTrue($process->isOk());
+    }
+
+    public function testIsFail(): void
+    {
+        $process = new Process((new ProcCommand('bash'))->addOption('-c', 'exit 5'));
+        $process->sync();
+        $this->assertTrue($process->isFail());
     }
 
     private function getSleepCommand(): ProcCommand
