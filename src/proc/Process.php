@@ -29,10 +29,13 @@ class Process
         return $this->getProcessStatus()['exitcode'] >= 0 ? $this->getProcessStatus()['exitcode'] : null;
     }
 
-    public function sync(): void
+    public function sync(?int $msTimeout = null): void
     {
+        $nsWaitUntil = null !== $msTimeout ? microtime(true) + $msTimeout / 1000 : null;
         while ($this->isRunning()) {
-            // do nothing
+            if (null !== $nsWaitUntil && microtime(true) > $nsWaitUntil) {
+                break;
+            }
         }
     }
 

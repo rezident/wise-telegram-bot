@@ -33,6 +33,14 @@ class ProcessTest extends TestCase
         $this->assertSame(0, $process->getExitCode());
     }
 
+    public function testSyncWithTimeout()
+    {
+        $process = new Process($this->getSleepCommand());
+        $process->sync(1);
+        $this->assertTrue($process->isRunning());
+        $this->killSleepCommand();
+    }
+
     public function testGetExitCode(): void
     {
         $process = new Process((new ProcCommand('bash'))->addOption('-c', 'exit 5'));
