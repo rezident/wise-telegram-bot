@@ -12,10 +12,11 @@ class ProcessTest extends TestCase
 {
     public function testRunProcess(): void
     {
-        new Process($this->getSleepCommand());
+        $process = new Process($this->getSleepCommand());
         $this->assertNotNull($this->getSleepCommandPid());
         $this->killSleepCommand();
         $this->assertNull($this->getSleepCommandPid());
+        $this->assertFalse($process->isRunning());
     }
 
     public function testIsRunning(): void
@@ -26,14 +27,14 @@ class ProcessTest extends TestCase
         $this->assertFalse($process->isRunning());
     }
 
-    public function testSync()
+    public function testSync(): void
     {
         $process = new Process(new ProcCommand('ls'));
         $process->sync();
         $this->assertSame(0, $process->getExitCode());
     }
 
-    public function testSyncWithTimeout()
+    public function testSyncWithTimeout(): void
     {
         $process = new Process($this->getSleepCommand());
         $process->sync(1);
@@ -48,11 +49,19 @@ class ProcessTest extends TestCase
         $this->assertSame(5, $process->getExitCode());
     }
 
-    public function testPullStdout()
+    public function testPullStdout(): void
     {
         $process = new Process((new ProcCommand('echo'))->addOption('hello'));
         $process->sync();
         $this->assertSame('hello', trim($process->getPipes()->pullStdout()));
+    }
+
+    public function testKillProcess(): void
+    {
+        $process = new Process($this->getSleepCommand());
+        $process->kill();
+        $this->assertFalse($process->isRunning());
+        $this->assertNull($this->getSleepCommandPid());
     }
 
     private function getSleepCommand(): ProcCommand

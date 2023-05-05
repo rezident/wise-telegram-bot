@@ -13,6 +13,10 @@ class Process
 
     private Pipes $pipes;
 
+    private int $exitCode = -1;
+
+    private bool $isRunning;
+
     public function __construct(ProcCommand $command)
     {
         $this->process = proc_open($command->getParts(), Pipes::DESCRIPTORS, $pipesArray);
@@ -21,12 +25,16 @@ class Process
 
     public function isRunning(): bool
     {
-        return $this->getProcessStatus()['running'];
+        $this->updateProcessStatus();
+
+        return $this->isRunning;
     }
 
     public function getExitCode(): ?int
     {
-        return $this->getProcessStatus()['exitcode'] >= 0 ? $this->getProcessStatus()['exitcode'] : null;
+        $this->updateProcessStatus();
+
+        return $this->exitCode;
     }
 
     public function sync(?int $msTimeout = null): void
@@ -44,16 +52,35 @@ class Process
         return $this->pipes;
     }
 
-    private function getProcessStatus()
+    public function kill(): void
     {
-        static $exitCode = -1;
-        $status = proc_get_status($this->process);
-        if ($status['exitcode'] >= 0) {
-            $exitCode = $status['exitcode'];
+        if (!\is_resource($this->process)) {
+            return;
         }
 
-        $status['exitcode'] = $exitCode;
+        proc_terminate($this->process);
+        $closeExitCode = proc_close($this->process);
+        if ($closeExitCode >= 0) {
+            $this->exitCode = $closeExitCode;
+        }
+        $this->isRunning = false;
+    }
 
-        return $status;
+    private function updateProcessStatus(): void
+    {
+        if (!\is_resource($this->process)) {
+            return;
+        }
+
+        $status = proc_get_status($this->process);
+        $this->isRunning = $status['running'];
+        if ($status['exitcode'] >= 0) {
+            $this->exitCode = $status['exitcode'];
+        }
+    }
+
+    public function __destruct()
+    {
+        $this->kill();
     }
 }
