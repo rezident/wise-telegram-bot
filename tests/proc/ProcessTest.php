@@ -64,6 +64,14 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
+    public function testKillProcessOnDestruct()
+    {
+        $process = new Process($this->getSleepCommand());
+        $this->assertNotNull($this->getSleepCommandPid());
+        unset($process);
+        $this->assertNull($this->getSleepCommandPid());
+    }
+
     private function getSleepCommand(): ProcCommand
     {
         return (new ProcCommand('sleep'))->addOption('5');
