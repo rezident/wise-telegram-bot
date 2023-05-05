@@ -72,6 +72,13 @@ class ProcessTest extends TestCase
         $this->assertNull($this->getSleepCommandPid());
     }
 
+    public function testPullStdoutAfterSync()
+    {
+        $process = new Process((new ProcCommand('cat'))->addOption(__FILE__));
+        $process->sync();
+        $this->assertSame(file_get_contents(__FILE__), $process->getPipes()->pullStdout());
+    }
+
     private function getSleepCommand(): ProcCommand
     {
         return (new ProcCommand('sleep'))->addOption('5');
